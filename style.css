@@ -1,0 +1,243 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Cielo profundo con dos nebulosas y una galaxia lejana difusa */
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse 40% 18% at 18% 78%, rgba(255, 140, 210, .28), transparent 70%),
+    radial-gradient(ellipse 30% 12% at 82% 14%, rgba(110, 200, 255, .25), transparent 70%),
+    radial-gradient(ellipse at 10% 10%, rgba(90, 40, 200, .45), transparent 50%),
+    radial-gradient(ellipse at 90% 90%, rgba(20, 60, 160, .5), transparent 55%),
+    #04020f;
+}
+
+body {
+  --bh: clamp(190px, 40vmin, 400px);   /* tamaño del agujero negro */
+  --core: calc(var(--bh) * .46);       /* tamaño del horizonte de sucesos */
+  --right: 6vw;
+  --top: calc(50% - var(--bh) / 2);
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: #e8e4ff;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* ---------- Galaxia espiral (giro lento) ---------- */
+html::before {
+  content: "";
+  position: fixed;
+  left: 3vw;
+  top: 6vh;
+  width: clamp(180px, 34vmin, 340px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff8e0 0 4%, rgba(255, 205, 150, .75) 10%, transparent 34%),
+    repeating-conic-gradient(from 0deg, rgba(180, 150, 255, .85) 0 10deg, rgba(90, 160, 255, .25) 10deg 24deg, transparent 24deg 45deg);
+  -webkit-mask-image: radial-gradient(circle, #000 15%, rgba(0, 0, 0, .55) 45%, transparent 70%);
+  mask-image: radial-gradient(circle, #000 15%, rgba(0, 0, 0, .55) 45%, transparent 70%);
+  filter: blur(1.5px);
+  opacity: .85;
+  animation: galaxia 90s linear infinite;
+  pointer-events: none;
+  z-index: -2;
+}
+
+@keyframes galaxia {
+  from { transform: perspective(700px) rotateX(58deg) rotateZ(0deg); }
+  to   { transform: perspective(700px) rotateX(58deg) rotateZ(360deg); }
+}
+
+/* ---------- Estrellas que titilan ---------- */
+html::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  box-shadow:
+    4vw 12vh #fff, 11vw 52vh #cfe8ff, 17vw 88vh #fff, 23vw 30vh #ffd6f5,
+    29vw 66vh #fff, 36vw 8vh #cfe8ff, 42vw 44vh #fff, 49vw 92vh #ffe9a8,
+    55vw 20vh #fff, 61vw 70vh #cfe8ff, 68vw 6vh #fff, 74vw 38vh #ffd6f5,
+    79vw 82vh #fff, 86vw 58vh #cfe8ff, 92vw 24vh #fff, 97vw 76vh #ffe9a8,
+    14vw 70vh #fff, 46vw 62vh #cfe8ff, 83vw 10vh #fff, 33vw 96vh #ffd6f5;
+  animation: titilar 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -2;
+}
+
+@keyframes titilar {
+  0%, 100% { opacity: .3; transform: scale(.8); }
+  50%      { opacity: 1;  transform: scale(1.35); }
+}
+
+/* ---------- Agujero negro: disco de acreción ---------- */
+body::before {
+  content: "";
+  position: fixed;
+  top: var(--top);
+  right: var(--right);
+  width: var(--bh);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    #fff3c4, #ffb347, #ff5e7e, #8a3ffc, #2a1a6e,
+    #8a3ffc, #ff5e7e, #ffb347, #fff3c4);
+  -webkit-mask-image: radial-gradient(circle, transparent 0 34%, #000 42%, #000 58%, transparent 71%);
+  mask-image: radial-gradient(circle, transparent 0 34%, #000 42%, #000 58%, transparent 71%);
+  filter: blur(2px) drop-shadow(0 0 18px rgba(255, 150, 80, .7));
+  animation: disco 7s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes disco { to { transform: rotate(360deg); } }
+
+/* ---------- Agujero negro: horizonte de sucesos ---------- */
+body::after {
+  content: "";
+  position: fixed;
+  top: calc(var(--top) + (var(--bh) - var(--core)) / 2);
+  right: calc(var(--right) + (var(--bh) - var(--core)) / 2);
+  width: var(--core);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #000;
+  box-shadow:
+    0 0 0 3px rgba(255, 220, 170, .9),
+    0 0 30px 8px rgba(255, 140, 70, .65),
+    0 0 90px 28px rgba(150, 70, 255, .5);
+  animation: latido 4.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); box-shadow:
+    0 0 0 3px rgba(255, 235, 200, 1),
+    0 0 40px 12px rgba(255, 140, 70, .8),
+    0 0 120px 40px rgba(150, 70, 255, .65); }
+}
+
+/* ---------- Contenido ---------- */
+h1 {
+  font-size: clamp(2rem, 7vw, 3.6rem);
+  font-weight: 900;
+  letter-spacing: .03em;
+  background: linear-gradient(90deg, #8be9ff, #c58bff, #ffb3e6, #8be9ff);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(180, 130, 255, .6));
+  animation: aurora 7s linear infinite, entrada 1s ease-out both;
+}
+
+h1:empty { display: none; }
+
+@keyframes aurora  { to { background-position: 300% center; } }
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+input {
+  width: min(88vw, 340px);
+  padding: .85rem 1.2rem;
+  font: inherit;
+  font-size: 1.1rem;
+  text-align: center;
+  color: #fff;
+  background: rgba(18, 10, 55, .6);
+  border: 2px solid rgba(160, 130, 255, .5);
+  border-radius: 999px;
+  outline: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 14px rgba(120, 80, 255, .3);
+  transition: border-color .3s, box-shadow .3s, transform .3s;
+  -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input::placeholder { color: rgba(220, 210, 255, .6); }
+input:focus {
+  border-color: #6ee7ff;
+  box-shadow: 0 0 26px rgba(0, 220, 255, .65);
+  transform: scale(1.04);
+}
+
+button {
+  padding: .85rem 2.4rem;
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(120deg, #6a2cf5, #f107a3, #ff9a3c, #6a2cf5);
+  background-size: 300% 300%;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  animation: brillo-fondo 5s linear infinite;
+  box-shadow: 0 0 22px rgba(241, 7, 163, .5);
+  transition: transform .2s, box-shadow .2s;
+}
+button:hover  { transform: translateY(-3px) scale(1.07); box-shadow: 0 0 36px rgba(255, 154, 60, .8); }
+button:active { transform: scale(.94); }
+button:focus-visible { outline: 3px solid #8be9ff; outline-offset: 5px; }
+
+@keyframes brillo-fondo {
+  from { background-position: 0% 50%; }
+  to   { background-position: 300% 50%; }
+}
+
+#mensaje {
+  margin-top: .8rem;
+  padding: .9rem 1.8rem;
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+  font-weight: 700;
+  color: #fff;
+  background: rgba(18, 10, 55, .55);
+  border: 1px solid rgba(160, 130, 255, .45);
+  border-radius: 18px;
+  text-shadow: 0 0 14px rgba(255, 255, 255, .7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: flotar 4s ease-in-out infinite;
+}
+#mensaje:empty { display: none; }
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* ---------- Pantallas anchas: contenido a la izquierda, agujero negro a la derecha ---------- */
+@media (min-width: 900px) {
+  body { padding-right: calc(var(--bh) + var(--right) + 3vw); }
+}
+
+/* ---------- Móvil: agujero negro abajo, centrado ---------- */
+@media (max-width: 899px) {
+  body {
+    --bh: clamp(150px, 42vmin, 260px);
+    --right: calc(50% - var(--bh) / 2);
+    --top: calc(100% - var(--bh) - 3vh);
+    padding-bottom: calc(var(--bh) + 6vh);
+    justify-content: flex-start;
+    padding-top: 12vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after, html::before, html::after { animation: none !important; transition: none !important; }
+}
